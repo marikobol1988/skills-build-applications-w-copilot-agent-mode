@@ -1,3 +1,13 @@
+## API configuration
+
+In Codespaces, define `VITE_CODESPACE_NAME` in `octofit-tracker/frontend/.env.local` with the Codespace name (without a URL scheme):
+
+```dotenv
+VITE_CODESPACE_NAME=your-codespace-name
+```
+
+Vite uses this value to call `https://<name>-8000.app.github.dev/api/`. Restart the Vite dev server after changing `.env.local`. When the variable is unset, the app uses `http://localhost:8000/api/` for local development.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

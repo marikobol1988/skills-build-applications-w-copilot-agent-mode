@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react'
-import { fetchCollection } from '../api.js'
-
 function displayValue(record, column) {
   if (column.render) return column.render(record)
 
@@ -12,24 +9,7 @@ function displayValue(record, column) {
   return value
 }
 
-function CollectionPage({ title, eyebrow, endpoint, columns }) {
-  const [state, setState] = useState({ status: 'loading', records: [], error: '' })
-  const [attempt, setAttempt] = useState(0)
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    fetchCollection(endpoint, controller.signal)
-      .then((records) => setState({ status: 'ready', records, error: '' }))
-      .catch((error) => {
-        if (error.name !== 'AbortError') {
-          setState({ status: 'error', records: [], error: error.message })
-        }
-      })
-
-    return () => controller.abort()
-  }, [attempt, endpoint])
-
+function CollectionPage({ title, eyebrow, endpoint, columns, state, onRetry }) {
   return (
     <section className="collection-page" aria-labelledby={`${endpoint}-title`}>
       <div className="eyebrow">{eyebrow}</div>
@@ -45,7 +25,7 @@ function CollectionPage({ title, eyebrow, endpoint, columns }) {
       {state.status === 'error' && (
         <div className="collection-error" role="alert">
           <p>Could not load {title.toLowerCase()}: {state.error}</p>
-          <button className="btn btn-dark btn-sm" onClick={() => setAttempt((value) => value + 1)}>
+          <button className="btn btn-dark btn-sm" onClick={onRetry}>
             Try again
           </button>
         </div>
